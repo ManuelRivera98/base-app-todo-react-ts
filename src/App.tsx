@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useState } from 'react';
+import TodoList from './components/TodoList';
+import NewTodo from './components/NewTodo';
+// models
+import { Text } from './models/app';
+import 'semantic-ui-css/semantic.min.css'
 
-function App() {
+const App: FC = () => {
+  const [list, setList] = useState<Text[]>([]);
+
+  const addText = (text: string): void => {
+    setList((prevState) => [
+      ...prevState,
+      { id: Math.random().toString(), text, }
+    ]);
+  };
+
+  const removeText = (id: string): void => {
+    setList((prevState) => {
+      const newList: Text[] = prevState.filter((element) => element.id !== id);
+      return newList;
+    })
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <NewTodo
+        addText={addText}
+      />
+      <TodoList
+        items={list}
+        removeText={removeText}
+      />
     </div>
-  );
-}
+  )
+};
 
 export default App;
